@@ -14,6 +14,9 @@ class Venditore(models.Model):
     def __str__(self):
         return self.username
 
+    class Meta:
+        verbose_name_plural = "Venditori"
+
 class Acquirente(models.Model):
 
     username = models.CharField(max_length=20, primary_key=True)
@@ -25,6 +28,9 @@ class Acquirente(models.Model):
 
     def __str__(self):
         return self.username
+
+    class Meta:
+        verbose_name_plural = "Acquirenti"
 
 class Articolo(models.Model):
 
@@ -42,15 +48,24 @@ class Articolo(models.Model):
     def __str__(self):
         return self.titolo
 
+    class Meta:
+        verbose_name_plural = "Articoli"
+
 class Offerta(models.Model):
 
     acquirente = models.ForeignKey(Acquirente, on_delete=models.CASCADE)
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=5, decimal_places=2)
 
-class Offerta(models.Model):
+    class Meta:
+        verbose_name_plural = "Offerte"
+
+class Recensione(models.Model):
 
     acquirente = models.ForeignKey(Acquirente, on_delete=models.CASCADE)
     venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE)
     testo = models.TextField()
     voto = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Recensioni"
