@@ -21,12 +21,11 @@ from gestione import urls
 from . import views
 
 urlpatterns = [
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LoginView.as_view(), name="logout"),
 
     path('gestione/', include('gestione.urls')),
     path('admin/', admin.site.urls),
 
-    path('registrazionevenditore/', views.VenditoreCreate.as_view(), name = 'registrazione-venditore'),
-    path('registrazione/', views.AcquirenteCreate.as_view(), name = 'registrazione-utente'),
+    path('signup/', views.UtenteCreate.as_view(), name = 'registrazione'),
 ]

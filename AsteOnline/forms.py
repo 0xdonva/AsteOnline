@@ -1,28 +1,28 @@
 from django import forms
 from gestione.models import *
 
-class VenditoreForm(forms.ModelForm):
+class UtenteForm(forms.ModelForm):
 
-    username = forms.CharField(max_length=20, required=True)
     email = forms.EmailField(max_length=20, required=True)
+    username = forms.CharField(max_length=20, required=True)
     password = forms.CharField(widget=forms.PasswordInput(), required=True)
-    via = forms.CharField(max_length=50, required=True)
-    numCivico = forms.CharField(max_length=5, required=True)
-    CAP = forms.IntegerField(required=True)
+    is_venditore = forms.BooleanField(required=False)
     
     class Meta:
-        model = Venditore
-        fields = ["username", "email", "password", "via", "numCivico", "CAP"]
-    
-class AcquirenteForm(forms.ModelForm):
+        model = Utente
+        fields = ["email", "username", "password", "is_venditore"]
 
-    username = forms.CharField(max_length=20, required=True)
-    email = forms.EmailField(max_length=20, required=True)
-    password = forms.CharField(widget=forms.PasswordInput(), required=True)
-    via = forms.CharField(max_length=50, required=True)
-    numCivico = forms.CharField(max_length=5, required=True)
-    CAP = forms.IntegerField(required=True)
+class LoginForm(forms.Form):
+    username = forms.CharField(label='', 
+        widget=forms.TextInput(
+            attrs = {
+                'placeholder': 'username',
+            }
+        ))
+    password = forms.CharField(label='', 
+        widget=forms.PasswordInput(
+            attrs = {
+                'placeholder': 'password'
+            }
+        ))
     
-    class Meta:
-        model = Acquirente
-        fields = ["username", "email", "password", "via", "numCivico", "CAP"]

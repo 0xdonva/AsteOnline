@@ -1,50 +1,41 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
-class Venditore(models.Model):
+class Utente(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='Email:',
+        max_length=254,
+        unique=True)
+    username = models.CharField(
+        verbose_name='Username:',
+        max_length=30,
+        unique=True)
+    password = models.CharField(
+        verbose_name="Password:",
+        max_length=20)
+    is_venditore = models.BooleanField(
+        verbose_name="Venditore:",
+        default=False)
 
-    username = models.CharField(max_length=20, primary_key=True)
-    email = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=20)
-    via = models.CharField(max_length=20)
-    numCivico = models.CharField(max_length=20)
-    CAP = models.CharField(max_length=20)
+    USERNAME_FIELD = "username"
 
     def save(self, *args, **kwargs):
         self.password = make_password(self.password)
-        super(Venditore, self).save(*args, **kwargs)
+        super(Utente, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.username
 
     class Meta:
-        verbose_name_plural = "Venditori"
-
-class Acquirente(models.Model):
-
-    username = models.CharField(max_length=20, primary_key=True)
-    email = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=20)
-    via = models.CharField(max_length=20)
-    numCivico = models.CharField(max_length=20)
-    CAP = models.CharField(max_length=20)
-
-    def save(self, *args, **kwargs):
-        self.password = make_password(self.password)
-        super(Acquirente, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.username
-
-    class Meta:
-        verbose_name_plural = "Acquirenti"
+        verbose_name_plural = "Utenti"
 
 class Articolo(models.Model):
 
     # Qua andrebbe l'ID ma viene messo in automatico
-    venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE)
+    venditore = models.ForeignKey(Utente, on_delete=models.CASCADE)
     titolo = models.CharField(max_length=20)
     schedaTecnica = models.TextField()
     immagine = models.CharField(max_length=20)
@@ -54,6 +45,11 @@ class Articolo(models.Model):
     dataInizioAsta = models.DateTimeField(auto_now=False, auto_now_add=False)
     durataAsta = models.IntegerField()
 
+    def save(self, *args, **kwargs):
+        if self.venditore.is_venditore == False:
+            raise Exception("Non è un venditore")
+        super(Articolo, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.titolo
 
@@ -62,7 +58,7 @@ class Articolo(models.Model):
 
 class Offerta(models.Model):
 
-    acquirente = models.ForeignKey(Acquirente, on_delete=models.CASCADE)
+    acquirente = models.ForeignKey(Utente, on_delete=models.CASCADE)
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=5, decimal_places=2)
 
@@ -71,8 +67,8 @@ class Offerta(models.Model):
 
 class Recensione(models.Model):
 
-    acquirente = models.ForeignKey(Acquirente, on_delete=models.CASCADE)
-    venditore = models.ForeignKey(Venditore, on_delete=models.CASCADE)
+    acquirente = models.ForeignKey(Utente, on_delete=models.CASCADE, related_name="acquirente")
+    venditore = models.ForeignKey(Utente, on_delete=models.CASCADE, related_name="venditore")
     testo = models.TextField()
     voto = models.IntegerField()
 
