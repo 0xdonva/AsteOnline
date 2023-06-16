@@ -18,12 +18,15 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from gestione import urls
+from . import views
 
 urlpatterns = [
-
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LoginView.as_view(), name="logout"),
 
     path('gestione/', include('gestione.urls')),
     path('admin/', admin.site.urls),
+
+    path('registrazionevenditore/', views.VenditoreCreate.as_view(), name = 'registrazione-venditore'),
+    path('registrazione/', views.AcquirenteCreate.as_view(), name = 'registrazione-utente'),
 ]

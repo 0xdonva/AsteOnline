@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
@@ -10,6 +11,10 @@ class Venditore(models.Model):
     via = models.CharField(max_length=20)
     numCivico = models.CharField(max_length=20)
     CAP = models.CharField(max_length=20)
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)
+        super(Venditore, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.username
@@ -25,6 +30,10 @@ class Acquirente(models.Model):
     via = models.CharField(max_length=20)
     numCivico = models.CharField(max_length=20)
     CAP = models.CharField(max_length=20)
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)
+        super(Acquirente, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.username
