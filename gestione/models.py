@@ -1,41 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 
 # Create your models here.
-
-class Utente(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='Email:',
-        max_length=254,
-        unique=True)
-    username = models.CharField(
-        verbose_name='Username:',
-        max_length=30,
-        unique=True)
-    password = models.CharField(
-        verbose_name="Password:",
-        max_length=20)
-    is_venditore = models.BooleanField(
-        verbose_name="Venditore:",
-        default=False)
-
-    USERNAME_FIELD = "username"
-
-    def save(self, *args, **kwargs):
-        self.password = make_password(self.password)
-        super(Utente, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.username
-
-    class Meta:
-        verbose_name_plural = "Utenti"
 
 class Articolo(models.Model):
 
     # Qua andrebbe l'ID ma viene messo in automatico
-    venditore = models.ForeignKey(Utente, on_delete=models.CASCADE)
+    venditore = models.ForeignKey(User, on_delete=models.CASCADE)
     titolo = models.CharField(max_length=20)
     schedaTecnica = models.TextField()
     immagine = models.CharField(max_length=20)
@@ -58,7 +29,7 @@ class Articolo(models.Model):
 
 class Offerta(models.Model):
 
-    acquirente = models.ForeignKey(Utente, on_delete=models.CASCADE)
+    acquirente = models.ForeignKey(User, on_delete=models.CASCADE)
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=5, decimal_places=2)
 
@@ -67,8 +38,8 @@ class Offerta(models.Model):
 
 class Recensione(models.Model):
 
-    acquirente = models.ForeignKey(Utente, on_delete=models.CASCADE, related_name="acquirente")
-    venditore = models.ForeignKey(Utente, on_delete=models.CASCADE, related_name="venditore")
+    acquirente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="acquirente")
+    venditore = models.ForeignKey(User, on_delete=models.CASCADE, related_name="venditore")
     testo = models.TextField()
     voto = models.IntegerField()
 

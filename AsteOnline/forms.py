@@ -1,28 +1,23 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.contrib.auth.forms import AuthenticationForm
 from gestione.models import *
 
-class UtenteForm(forms.ModelForm):
+class VenditoreForm(UserCreationForm):
 
-    email = forms.EmailField(max_length=20, required=True)
-    username = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(widget=forms.PasswordInput(), required=True)
-    is_venditore = forms.BooleanField(required=False)
-    
-    class Meta:
-        model = Utente
-        fields = ["email", "username", "password", "is_venditore"]
+    def save(self, commit=True):
+        user = super().save(commit) #ottengo un riferimento all'utente
+        g = Group.objects.get(name="Venditori") #cerco il gruppo che mi interessa
+        g.user_set.add(user) #aggiungo l'utente al gruppo
+        return user
 
-class LoginForm(forms.Form):
-    username = forms.CharField(label='', 
-        widget=forms.TextInput(
-            attrs = {
-                'placeholder': 'username',
-            }
-        ))
-    password = forms.CharField(label='', 
-        widget=forms.PasswordInput(
-            attrs = {
-                'placeholder': 'password'
-            }
-        ))
+class AcquirenteForm(UserCreationForm):
+
+    def save(self, commit=True):
+        user = super().save(commit) #ottengo un riferimento all'utente
+        g = Group.objects.get(name="Acquirenti") #cerco il gruppo che mi interessa
+        g.user_set.add(user) #aggiungo l'utente al gruppo
+        return user
+
     

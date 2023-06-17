@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView, FormView
-from django.contrib.auth import authenticate
+from django.views.generic.base import TemplateView
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
@@ -10,25 +11,17 @@ from django.http import HttpResponse
 from .forms import *
 from gestione.models import *
 
-class UtenteCreate(CreateView):
+class AcquirenteCreate(CreateView):
 
-    model = Utente
-    fields = ('email', 'username', 'password', 'is_venditore')
-    form_class = UtenteForm
+    form_class = AcquirenteForm
     template_name = 'registration.html'
+    success_url = "/login/"
 
-class LoginView(FormView):
-    
-    form_class = LoginForm
-    template_name = 'login.html'
+class VenditoreCreate(CreateView):
 
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        password = make_password(form.cleaned_data['password'])
-        user = authenticate(username=username, password=password)
+    form_class = VenditoreForm
+    template_name = 'registration.html'
+    success_url = "/login/"
 
-        if user is not None:
-           login(self.request, user)
-           return HttpResponseRedirect(self.success_url)
-        else:
-           return self.form_invalid(form)
+class HomepageView(TemplateView):
+    template_name = "homepage.html"

@@ -1,0 +1,15 @@
+{% extends 'baseExt.html' %}
+
+{% block title %} Homepage {% endblock title %}
+
+{% block header1 %}
+    <h1> Homepage </h1>
+{% endblock header1 %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p> Benvenuto, {{user.get_username}}. </p>
+    {% else %}
+        <p> Benvenuto, Anonimo. </p>
+    {% endif %}
+{% endblock content %}
