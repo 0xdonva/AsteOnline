@@ -26,4 +26,5 @@ urlpatterns = [
     path('crea_annuncio/', views.CreateAnnuncioView.as_view(), name = 'annuncio-create'),
     path('annuncio/', views.AnnuncioListView.as_view(), name='annuncio-list'),
     path('articolo/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='articolo-update'),
+    path('articolo/<int:pk>/delete/', views.AnnuncioDeleteView.as_view(), name='articolo-delete'),
 ]

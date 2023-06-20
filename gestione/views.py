@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -36,4 +36,9 @@ class AnnuncioUpdateView(LoginRequiredMixin, UpdateView):
     model = Articolo
     form_class = AnnuncioForm
     template_name = 'annuncio_update.html'
+    success_url = reverse_lazy('homepage')
+
+class AnnuncioDeleteView(LoginRequiredMixin, DeleteView):
+    model = Articolo
+    template_name = 'annuncio_delete.html'
     success_url = reverse_lazy('homepage')
