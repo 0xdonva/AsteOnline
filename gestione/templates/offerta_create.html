@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Nuova Offerta per l'Articolo "{{ articolo.titolo }}"</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if form.errors %}
+      <ul class="errorlist">
+        {% for field_errors in form.errors.values %}
+          {% for error in field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <button type="submit">Invia Offerta</button>
+  </form>
+{% endblock %}

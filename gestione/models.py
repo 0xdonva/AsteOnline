@@ -33,6 +33,14 @@ class Offerta(models.Model):
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=5, decimal_places=2)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.elimina_offerte_precedenti()
+
+    def elimina_offerte_precedenti(self):
+        offerte_precedenti = Offerta.objects.filter(articolo=self.articolo, saldo__lt=self.saldo)
+        offerte_precedenti.delete()
+
     class Meta:
         verbose_name_plural = "Offerte"
 

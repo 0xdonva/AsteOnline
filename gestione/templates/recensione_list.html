@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Recensioni</h2>
+  <h3>Venditore: {{ venditore_username }}</h3>
+  {% if recensioni %}
+    <ul>
+      {% for recensione in recensioni %}
+        <li>
+          <strong>Acquirente:</strong> {{ recensione.acquirente.username }}<br>
+          <strong>Testo:</strong> {{ recensione.testo }}<br>
+          <strong>Voto:</strong> {{ recensione.voto }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Non ci sono ancora recensioni per questo venditore.</p>
+  {% endif %}
+{% endblock %}

@@ -23,8 +23,13 @@ app_name = 'gestione'
 
 urlpatterns = [
     #Parte legata al venditore
-    path('crea_annuncio/', views.CreateAnnuncioView.as_view(), name = 'annuncio-create'),
-    path('annuncio/', views.AnnuncioListView.as_view(), name='annuncio-list'),
-    path('articolo/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='articolo-update'),
-    path('articolo/<int:pk>/delete/', views.AnnuncioDeleteView.as_view(), name='articolo-delete'),
+    path('nuovo_annuncio/', views.AnnuncioCreateView.as_view(), name = 'annuncio-create'),
+    path('annuncio/<int:pk>/', views.AnnuncioListView.as_view(), name='annuncio-list'),
+    path('annuncio/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='annuncio-update'),
+    path('annuncio/<int:pk>/delete/', views.AnnuncioDeleteView.as_view(), name='annuncio-delete'),
+
+    path('nuova_offerta/<articolo_id>/', views.OffertaCreateView.as_view(), name='offerta-create'),
+
+    path('recensioni/<venditore_username>/', views.RecensioneListView.as_view(), name = 'recensione-list'),
+    path('nuova_recensione/<venditore_username>/', views.RecensioneCreateView.as_view(), name='recensione-create'),
 ]
