@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from . import views
+
 app_name = 'gestione'
 
 urlpatterns = [
-    
+    #Parte legata al venditore
+    path('crea_annuncio/', views.CreateAnnuncioView.as_view(), name = 'annuncio-create'),
+    path('annuncio/', views.AnnuncioListView.as_view(), name='annuncio-list'),
+    path('articolo/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='articolo-update'),
 ]
