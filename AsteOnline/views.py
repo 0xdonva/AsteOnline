@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate, logout
@@ -23,5 +24,7 @@ class VenditoreCreate(CreateView):
     template_name = 'registration.html'
     success_url = "/login/"
 
-class HomepageView(TemplateView):
-    template_name = "homepage.html"
+class HomeView(ListView):
+    model = Articolo
+    template_name = 'home.html'
+    context_object_name = 'articoli'

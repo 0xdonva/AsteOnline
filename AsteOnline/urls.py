@@ -29,5 +29,5 @@ urlpatterns = [
     path('gestione/', include('gestione.urls')),
     path('admin/', admin.site.urls),
 
-    path('', views.HomepageView.as_view(), name="homepage")
+    path('', views.HomeView.as_view(), name="homepage")
 ]

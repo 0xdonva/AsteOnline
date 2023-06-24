@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import UpdateView, DeleteView
+from django.views.generic import UpdateView, DeleteView, DetailView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -28,10 +28,10 @@ class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.venditore = self.request.user.username
         return super().form_valid(form)
 
-class AnnuncioListView(ListView):
+class DettaglioArticoloView(DetailView):
     model = Articolo
-    template_name = 'annuncio_list.html'
-    context_object_name = 'articoli'
+    template_name = 'dettaglio_articolo.html'
+    context_object_name = 'articolo'
 
 class AnnuncioUpdateView(LoginRequiredMixin, UpdateView):
     model = Articolo
