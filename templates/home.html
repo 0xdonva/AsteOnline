@@ -9,7 +9,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ articolo.titolo }}</h5>
             <p class="card-text">{{ articolo.schedaTecnica }}</p>
-            <a href="{% url 'gestione:dettaglio-articolo' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
+            <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
           </div>
         </div>
       </div>

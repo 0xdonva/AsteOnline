@@ -24,7 +24,7 @@ app_name = 'gestione'
 urlpatterns = [
     #Parte legata al venditore
     path('nuovo_annuncio/', views.AnnuncioCreateView.as_view(), name = 'annuncio-create'),
-    path('annuncio/<int:pk>/', views.DettaglioArticoloView.as_view(), name='dettaglio-articolo'),
+    path('annuncio/<int:pk>/', views.AnnuncioDetailView.as_view(), name='annuncio-detail'),
     path('annuncio/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='annuncio-update'),
     path('annuncio/<int:pk>/delete/', views.AnnuncioDeleteView.as_view(), name='annuncio-delete'),
 

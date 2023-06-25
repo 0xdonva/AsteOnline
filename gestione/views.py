@@ -11,6 +11,8 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponse
+from datetime import timedelta
+from django.utils import timezone
 
 # Create your views here.
 
@@ -28,10 +30,29 @@ class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.venditore = self.request.user.username
         return super().form_valid(form)
 
-class DettaglioArticoloView(DetailView):
+class AnnuncioDetailView(DetailView):
     model = Articolo
-    template_name = 'dettaglio_articolo.html'
+    template_name = 'annuncio_detail.html'
     context_object_name = 'articolo'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        articolo = self.object 
+        # Ottieni l'ultima offerta per l'articolo
+        ultima_offerta = Offerta.objects.filter(articolo=self.object).order_by('-id').first()
+        # Viene ottenuta il tempo rimanente
+        ora_attuale = timezone.now()
+        ora_inizio_asta = articolo.dataInizioAsta
+        delta = ora_inizio_asta + timedelta(hours=articolo.durataAsta)
+        tempo_restante = (delta - ora_attuale).min
+
+        context['venditore'] = articolo.venditore
+        context['id'] = articolo.id
+        context['tempo_restante'] = tempo_restante
+        context['ultima_offerta'] = ultima_offerta
+        
+        return context
 
 class AnnuncioUpdateView(LoginRequiredMixin, UpdateView):
     model = Articolo
@@ -62,7 +83,7 @@ class OffertaCreateView(View):
             else:
                 offerta = Offerta(acquirente=request.user, articolo=articolo, saldo=saldo)
                 offerta.save()
-                return redirect('dettaglio_articolo', articolo_id=articolo.id)
+                return redirect(AnnuncioDetailView.as_view(), pk=articolo.id)
 
         return render(request, 'offerta_create.html', {'form': form, 'articolo': articolo})
 

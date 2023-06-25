@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Dettaglio Articolo{% endblock %}
+
+{% block content %}
+    <h1>{{ articolo.titolo }}</h1>
+    <p>Scheda Tecnica: {{ articolo.schedaTecnica }}</p>
+    <p>Prezzo Iniziale: {{ articolo.prezzoIniziale }}</p>
+    <p>Prezzo Riserva: {{ articolo.prezzoRiserva }}</p>
+    <p>Data Inizio Asta: {{ articolo.dataInizioAsta }}</p>
+    <p>Durata Asta: {{ articolo.durataAsta }}</p>
+    <p>Venditore: <a href="{% url 'gestione:recensione-list' venditore_username=articolo.venditore %}">{{articolo.venditore}}</a></p>
+
+    {% if ultima_offerta %}
+        <h2>Ultima Offerta</h2>
+        <p>Acquirente: {{ ultima_offerta.acquirente }}</p>
+        <p>Saldo: {{ ultima_offerta.saldo }}</p>
+        {% if user.is_authenticated %}
+          <p>Tempo restante: {{ tempo_restante }}</p>
+          {% if tempo_restante > 1 %}
+            <a href="{% url 'gestione:offerta-create' pk=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
+          {% endif %}
+        {% endif %}
+    {% else %}
+        <p>Non ci sono offerte per questo articolo al momento.</p>
+    {% endif %}
+{% endblock %}
