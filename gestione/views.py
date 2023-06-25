@@ -47,8 +47,6 @@ class AnnuncioDetailView(DetailView):
         delta = ora_inizio_asta + timedelta(hours=articolo.durataAsta)
         tempo_restante = (delta - ora_attuale).min
 
-        context['venditore'] = articolo.venditore
-        context['id'] = articolo.id
         context['tempo_restante'] = tempo_restante
         context['ultima_offerta'] = ultima_offerta
         
@@ -93,8 +91,11 @@ class RecensioneListView(ListView):
     template_name = 'recensione_list.html'
     context_object_name = 'recensioni'
 
+    # Metodo che restituisce la queryset (insieme di oggetti) da utilizzare per la visualizzazione della lista di recensioni.
     def get_queryset(self):
+        # Otteniamo l'username del venditore dal URL
         venditore = User.objects.get(username=self.kwargs['venditore_username'])
+        # Filtriamo le recensioni per il venditore specificato
         return Recensione.objects.filter(venditore=venditore)
 
 class RecensioneCreateView(LoginRequiredMixin, CreateView):
@@ -103,9 +104,11 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
     template_name = 'recensione_create.html'
 
     def test_func(self):
+        # Metodo che controlla se l'utente appartiene al gruppo 'Acquirenti'
         return self.request.user.groups.filter(name='Acquirenti').exists()
 
     def form_valid(self, form):
+        # Metodo chiamato quando il form è valido
         venditore = User.objects.get(username=self.kwargs['venditore_username'])
         form.instance.acquirente = self.request.user
         form.instance.venditore = venditore
@@ -113,5 +116,6 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        # Metodo che restituisce l'URL di successo dopo la creazione della recensione
         venditore_username = self.kwargs['venditore_username']
         return reverse('recensioni', kwargs={'venditore_username': venditore_username})
