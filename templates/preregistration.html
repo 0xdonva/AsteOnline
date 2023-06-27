@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrazione{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="box left-box">
+        <h2>Registrazione Venditore</h2>
+        <p>Registrati come venditore</p>
+        <a href="{% url 'registrazione-venditore' %}">Registrati</a>
+    </div>
+    <div class="box right-box">
+        <h2>Registrazione Acquirente</h2>
+        <p>Registrati come acquirente</p>
+        <a href="{% url 'registrazione-acquirente' %}">Registrati</a>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .box {
+        width: 200px;
+        height: 200px;
+        margin: 10px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .left-box {
+        background-color: lightblue;
+    }
+
+    .right-box {
+        background-color: lightgreen;
+    }
+</style>

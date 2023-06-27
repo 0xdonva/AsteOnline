@@ -14,7 +14,10 @@ from django.http import HttpResponse
 from datetime import timedelta
 from django.utils import timezone
 
-# Create your views here.
+# Costanti
+CATEGORIE = ['Elettronica', 'Informatica', 'CD e Vinili', 'Videogiochi', 'Strumenti musicali', 'Film e DVD']
+
+# View
 
 class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Articolo

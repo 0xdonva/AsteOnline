@@ -5,17 +5,31 @@ from datetime import datetime
 # Create your models here.
 
 class Articolo(models.Model):
+    CATEGORIE = [
+        ('Elettronica','Elettronica'),
+        ('Informatica','Informatica'),
+        ('CD e Vinili', 'CD e Vinili'),
+        ('Videogiochi','Videogiochi'),
+        ('Strumenti musicali', 'Strumenti musicali'),
+        ('Film e DVD', 'Film e DVD')
+    ]
+    ORE = [
+        (12, 12),
+        (24, 24),
+        (48, 48),
+        (72, 72)
+    ]
 
     # Qua andrebbe l'ID ma viene messo in automatico
     venditore = models.CharField(max_length=20)
     titolo = models.CharField(max_length=20)
     schedaTecnica = models.TextField()
-    immagine = models.CharField(max_length=20)
+    categoria = models.CharField(max_length=20, choices=CATEGORIE, default='Elettronica')
+    immagine = models.ImageField(upload_to="articoli/%Y/%m/", height_field=None, width_field=None, max_length=None)
     prezzoIniziale = models.DecimalField(max_digits=5, decimal_places=2)
     prezzoRiserva = models.DecimalField(max_digits=5, decimal_places=2)
-    prezzoAttuale = models.DecimalField(max_digits=5, decimal_places=2)
     dataInizioAsta = models.DateTimeField(auto_now=False, auto_now_add=True)
-    durataAsta = models.IntegerField()
+    durataAsta = models.IntegerField(choices=ORE, default=12)
 
     def save(self, *args, **kwargs):
         self.prezzoAttuale = 0
