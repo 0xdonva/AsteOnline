@@ -25,7 +25,7 @@ class Articolo(models.Model):
     titolo = models.CharField(max_length=20)
     schedaTecnica = models.TextField()
     categoria = models.CharField(max_length=20, choices=CATEGORIE, default='Elettronica')
-    immagine = models.ImageField(upload_to="articoli/%Y/%m/", height_field=None, width_field=None, max_length=None)
+    immagine = models.ImageField(upload_to="articoli/", height_field=None, width_field=None, max_length=None)
     prezzoIniziale = models.DecimalField(max_digits=5, decimal_places=2)
     prezzoRiserva = models.DecimalField(max_digits=5, decimal_places=2)
     dataInizioAsta = models.DateTimeField(auto_now=False, auto_now_add=True)

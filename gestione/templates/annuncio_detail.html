@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1>{{ articolo.titolo }}</h1>
+    <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
     <p>Scheda Tecnica: {{ articolo.schedaTecnica }}</p>
     <p>Prezzo Iniziale: {{ articolo.prezzoIniziale }}</p>
     <p>Prezzo Riserva: {{ articolo.prezzoRiserva }}</p>

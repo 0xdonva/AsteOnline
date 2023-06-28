@@ -33,6 +33,15 @@ class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.venditore = self.request.user.username
         return super().form_valid(form)
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.venditore = self.request.user.username
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
 class AnnuncioDetailView(DetailView):
     model = Articolo
     template_name = 'annuncio_detail.html'
