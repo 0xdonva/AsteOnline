@@ -31,3 +31,14 @@ class HomeView(ListView):
     model = Articolo
     template_name = 'home.html'
     context_object_name = 'articoli'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_authenticated:
+            group = Group.objects.get(name='Venditori')
+            is_venditore = group in user.groups.all()
+            context['is_venditore'] = is_venditore
+            if is_venditore:
+                context['username'] = self.request.user.username
+        return context

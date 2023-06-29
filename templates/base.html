@@ -27,10 +27,13 @@
                 <!-- Aggiungi altre voci del menu navbar se necessario -->
             </ul>
             <ul class="navbar-nav ml-auto">
-                {% if venditore %}
+                {% if is_venditore %}
                 <!-- Se l'utente è un venditore, mostra un link per il logout -->
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'gestione:annuncio-create' %}">Crea annuncio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gestione:recensione-list' venditore_username=username %}">Profilo</a>
                 </li>
                 {% endif %}
             </ul>

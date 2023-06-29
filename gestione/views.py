@@ -4,7 +4,7 @@ from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import UpdateView, DeleteView, DetailView
 from django.views.generic.list import ListView
@@ -61,6 +61,7 @@ class AnnuncioDetailView(DetailView):
 
         context['tempo_restante'] = tempo_restante
         context['ultima_offerta'] = ultima_offerta
+        context['username'] = self.request.user.username
         
         return context
 
@@ -103,11 +104,16 @@ class RecensioneListView(ListView):
     template_name = 'recensione_list.html'
     context_object_name = 'recensioni'
 
-    # Metodo che restituisce la queryset (insieme di oggetti) da utilizzare per la visualizzazione della lista di recensioni.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        venditore = self.kwargs['venditore_username']
+        articoli = Articolo.objects.filter(venditore=venditore)
+        context['articoli'] = articoli
+        context['venditore'] = venditore
+        return context
+
     def get_queryset(self):
-        # Otteniamo l'username del venditore dal URL
         venditore = User.objects.get(username=self.kwargs['venditore_username'])
-        # Filtriamo le recensioni per il venditore specificato
         return Recensione.objects.filter(venditore=venditore)
 
 class RecensioneCreateView(LoginRequiredMixin, CreateView):
@@ -124,10 +130,9 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
         venditore = User.objects.get(username=self.kwargs['venditore_username'])
         form.instance.acquirente = self.request.user
         form.instance.venditore = venditore
-        success_url = f'/gestione/recensioni/{venditore_username}'
         return super().form_valid(form)
 
     def get_success_url(self):
         # Metodo che restituisce l'URL di successo dopo la creazione della recensione
         venditore_username = self.kwargs['venditore_username']
-        return reverse('recensioni', kwargs={'venditore_username': venditore_username})
+        return reverse('gestione:recensione-list', kwargs={'venditore_username': venditore_username})

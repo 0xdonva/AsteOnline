@@ -1,19 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Recensioni</h2>
-  <h3>Venditore: {{ venditore_username }}</h3>
-  {% if recensioni %}
-    <ul>
-      {% for recensione in recensioni %}
-        <li>
-          <strong>Acquirente:</strong> {{ recensione.acquirente.username }}<br>
-          <strong>Testo:</strong> {{ recensione.testo }}<br>
-          <strong>Voto:</strong> {{ recensione.voto }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Non ci sono ancora recensioni per questo venditore.</p>
-  {% endif %}
+  <h1>Recensioni</h1>
+
+  <!-- Mostra le recensioni -->
+  {% for recensione in recensioni %}
+      <div class="card mb-3">
+          <div class="card-body">
+              <h5 class="card-title">Recensione di {{ recensione.acquirente.username }}</h5>
+              <p class="card-text">{{ recensione.testo }}</p>
+              <p class="card-text">Voto: {{ recensione.voto }}</p>
+          </div>
+      </div>
+  {% empty %}
+      <p>Non ci sono recensioni disponibili.</p>
+  {% endfor %}
+  <a href="{% url 'gestione:recensione-create' venditore_username=venditore %}" class="btn btn-primary">Nuova Recensione</a>
+  
+  <hr>
+  
+  <h1>Articoli in vendita</h1>
+  
+  <!-- Mostra gli articoli in vendita -->
+  {% for articolo in articoli %}
+      <div class="card mb-3">
+          <div class="card-body">
+              <h5 class="card-title">{{ articolo.titolo }}</h5>
+              <p class="card-text">Prezzo Attuale: {{ articolo.prezzoAttuale }}</p>
+              <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Vai</a>
+          </div>
+      </div>
+  {% empty %}
+      <p>Non ci sono articoli in vendita.</p>
+  {% endfor %}
 {% endblock %}

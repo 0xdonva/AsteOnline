@@ -25,4 +25,9 @@
     {% else %}
         <p>Non ci sono offerte per questo articolo al momento.</p>
     {% endif %}
+
+    {% if articolo.venditore == username %}
+    <a href="{% url 'gestione:annuncio-update' pk=articolo.id %}" class="btn btn-primary">Modifica</a>
+    <a href="{% url 'gestione:annuncio-delete' pk=articolo.id %}" class="btn btn-primary">Elimina</a>
+    {% endif %}
 {% endblock %}
