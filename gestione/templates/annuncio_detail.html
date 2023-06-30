@@ -17,9 +17,9 @@
         <p>Acquirente: {{ ultima_offerta.acquirente }}</p>
         <p>Saldo: {{ ultima_offerta.saldo }}</p>
         {% if user.is_authenticated %}
-          <p>Tempo restante: {{ tempo_restante }}</p>
+          <p>Tempo restante: {{ tempo_restante }} minuti.</p>
           {% if tempo_restante > 1 %}
-            <a href="{% url 'gestione:offerta-create' pk=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
+            <a href="{% url 'gestione:offerta-create' articolo_id=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
           {% endif %}
         {% endif %}
     {% else %}

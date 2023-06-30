@@ -14,6 +14,10 @@ class AnnuncioCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['immagine'].required = False
+        self.fields['dataFineAsta'].required = False
+        self.fields['dataFineAsta'].widget = forms.HiddenInput()
+        self.fields['terminato'].required = False
+        self.fields['terminato'].widget = forms.HiddenInput()
         self.fields['venditore'].widget = forms.HiddenInput()
         self.fields['venditore'].required = False
 

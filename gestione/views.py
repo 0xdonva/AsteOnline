@@ -54,27 +54,56 @@ class AnnuncioDetailView(DetailView):
         # Ottieni l'ultima offerta per l'articolo
         ultima_offerta = Offerta.objects.filter(articolo=self.object).order_by('-id').first()
         # Viene ottenuta il tempo rimanente
-        ora_attuale = timezone.now()
-        ora_inizio_asta = articolo.dataInizioAsta
-        delta = ora_inizio_asta + timedelta(hours=articolo.durataAsta)
-        tempo_restante = (delta - ora_attuale).min
 
-        context['tempo_restante'] = tempo_restante
+        if str(articolo.dataFineAsta - timezone.now())[0] == '-':
+            context['tempo_restante'] = 0
+            articolo.terminato = True
+            articolo.save()
+        else:
+            context['tempo_restante'] = round((articolo.dataFineAsta - timezone.now()).seconds / 60)
         context['ultima_offerta'] = ultima_offerta
         context['username'] = self.request.user.username
         
         return context
 
-class AnnuncioUpdateView(LoginRequiredMixin, UpdateView):
+class AnnuncioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Articolo
     form_class = AnnuncioUpdateForm
     template_name = 'annuncio_update.html'
     success_url = reverse_lazy('homepage')
 
-class AnnuncioDeleteView(LoginRequiredMixin, DeleteView):
+    def test_func(self):
+        # Verifica se l'utente corrente è il venditore dell'articolo
+        articolo = self.get_object()
+        return articolo.venditore == self.request.user.username
+
+
+class AnnuncioDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Articolo
     template_name = 'annuncio_delete.html'
     success_url = reverse_lazy('homepage')
+
+    def test_func(self):
+        # Verifica se l'utente corrente è il venditore dell'articolo
+        articolo = self.get_object()
+        return articolo.venditore == self.request.user.username
+
+class AnnuncioSearchView(ListView):
+    model = Articolo
+    template_name = 'annuncio_search.html'
+    context_object_name = 'articoli'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')  # Ottieni il valore della query dalla richiesta GET
+        if query:
+            return Articolo.objects.filter(titolo__icontains=query)  # Filtra gli articoli per il titolo che contiene la query
+        else:
+            return Articolo.objects.all()  # Restituisci tutti gli articoli se la query non è presente
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q')  # Passa il valore della query al contesto del template
+        return context
 
 # View riguardanti le offerte
 class OffertaCreateView(View):
@@ -94,7 +123,7 @@ class OffertaCreateView(View):
             else:
                 offerta = Offerta(acquirente=request.user, articolo=articolo, saldo=saldo)
                 offerta.save()
-                return redirect(AnnuncioDetailView.as_view(), pk=articolo.id)
+                return reverse('gestione:annuncio-detail', kwargs={'pk': articolo.id})
 
         return render(request, 'offerta_create.html', {'form': form, 'articolo': articolo})
 

@@ -3,6 +3,7 @@
 {% block content %}
   <div class="row">
     {% for articolo in articoli %}
+      {% if articolo.terminato == False %}
       <div class="col-md-4">
         <div class="card">
           <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
@@ -13,6 +14,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
     {% endfor %}
   </div>
 {% endblock %}

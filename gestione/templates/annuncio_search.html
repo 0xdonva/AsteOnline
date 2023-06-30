@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Ricerca Articolo{% endblock %}
+
+{% block content %}
+    <h1>Ricerca Articolo</h1>
+
+    <form method="GET" action="{% url 'gestione:annuncio-search' %}">
+        <input type="text" name="q" placeholder="Cerca articolo">
+        <button type="submit">Cerca</button>
+    </form>
+
+    <h2>Risultati della ricerca per "{{ search_query }}"</h2>
+
+    {% if articoli %}
+        <ul>
+            {% for articolo in articoli %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ articolo.titolo }}</h5>
+                        <p class="card-text">Prezzo Attuale: {{ articolo.prezzoAttuale }}</p>
+                        <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Vai</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nessun articolo trovato.</p>
+    {% endif %}
+{% endblock %}

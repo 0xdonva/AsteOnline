@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Create your models here.
 
@@ -30,9 +31,11 @@ class Articolo(models.Model):
     prezzoRiserva = models.DecimalField(max_digits=5, decimal_places=2)
     dataInizioAsta = models.DateTimeField(auto_now=False, auto_now_add=True)
     durataAsta = models.IntegerField(choices=ORE, default=12)
+    dataFineAsta = models.DateTimeField(auto_now=False, auto_now_add=False)
+    terminato = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.prezzoAttuale = 0
+        self.dataFineAsta = timezone.now() + timedelta(hours=self.durataAsta)
         super(Articolo, self).save(*args, **kwargs)
 
     def __str__(self):
