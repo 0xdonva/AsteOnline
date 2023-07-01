@@ -3,31 +3,47 @@
 {% block title %}Dettaglio Articolo{% endblock %}
 
 {% block content %}
-    <h1>{{ articolo.titolo }}</h1>
-    <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
-    <p>Scheda Tecnica: {{ articolo.schedaTecnica }}</p>
-    <p>Prezzo Iniziale: {{ articolo.prezzoIniziale }}</p>
-    <p>Prezzo Riserva: {{ articolo.prezzoRiserva }}</p>
-    <p>Data Inizio Asta: {{ articolo.dataInizioAsta }}</p>
-    <p>Durata Asta: {{ articolo.durataAsta }}</p>
-    <p>Venditore: <a href="{% url 'gestione:recensione-list' venditore_username=articolo.venditore %}">{{articolo.venditore}}</a></p>
+  <h1>{{ articolo.titolo }}</h1>
+  <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
+  <p>Scheda Tecnica: {{ articolo.schedaTecnica }}</p>
+  <p>Prezzo Iniziale: {{ articolo.prezzoIniziale }}</p>
+  <p>Prezzo Riserva: {{ articolo.prezzoRiserva }}</p>
+  <p>Data Inizio Asta: {{ articolo.dataInizioAsta }}</p>
+  <p>Durata Asta: {{ articolo.durataAsta }}</p>
+  <p>Venditore: <a href="{% url 'gestione:recensione-list' venditore_username=articolo.venditore %}">{{articolo.venditore}}</a></p>
 
-    {% if ultima_offerta %}
-        <h2>Ultima Offerta</h2>
-        <p>Acquirente: {{ ultima_offerta.acquirente }}</p>
-        <p>Saldo: {{ ultima_offerta.saldo }}</p>
-        {% if user.is_authenticated %}
-          <p>Tempo restante: {{ tempo_restante }} minuti.</p>
-          {% if tempo_restante > 1 %}
-            <a href="{% url 'gestione:offerta-create' articolo_id=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
-          {% endif %}
+  {% if ultima_offerta %}
+      <h2>Ultima Offerta</h2>
+      <p>Acquirente: {{ ultima_offerta.acquirente }}</p>
+      <p>Saldo: {{ ultima_offerta.saldo }}</p>
+      {% if user.is_authenticated %}
+        <p>Tempo restante: {{ tempo_restante }} minuti.</p>
+        {% if tempo_restante > 1 %}
+          <a href="{% url 'gestione:offerta-create' articolo_id=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
         {% endif %}
-    {% else %}
-        <p>Non ci sono offerte per questo articolo al momento.</p>
-    {% endif %}
+      {% endif %}
+  {% else %}
+      <p>Non ci sono offerte per questo articolo al momento.</p>
+  {% endif %}
 
-    {% if articolo.venditore == username %}
-    <a href="{% url 'gestione:annuncio-update' pk=articolo.id %}" class="btn btn-primary">Modifica</a>
-    <a href="{% url 'gestione:annuncio-delete' pk=articolo.id %}" class="btn btn-primary">Elimina</a>
-    {% endif %}
+  {% if articolo.venditore == username %}
+  <a href="{% url 'gestione:annuncio-update' pk=articolo.id %}" class="btn btn-primary">Modifica</a>
+  <a href="{% url 'gestione:annuncio-delete' pk=articolo.id %}" class="btn btn-primary">Elimina</a>
+  {% endif %}
+
+  <h3>Articoli consigliati</h3>
+  <div class="row">
+    {% for articolo in articoli_consigliati %}
+      <div class="col-md-4">
+        <div class="card">
+          <img src="{{ articolo.immagine.url }}" class="card-img-top" alt="{{ articolo.titolo }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ articolo.titolo }}</h5>
+            <p class="card-text">{{ articolo.descrizione }}</p>
+            <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

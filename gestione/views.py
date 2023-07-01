@@ -11,8 +11,11 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.http import HttpResponse
+from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
+
+import re
 
 # Costanti
 CATEGORIE = ['Elettronica', 'Informatica', 'CD e Vinili', 'Videogiochi', 'Strumenti musicali', 'Film e DVD']
@@ -57,12 +60,19 @@ class AnnuncioDetailView(DetailView):
 
         if str(articolo.dataFineAsta - timezone.now())[0] == '-':
             context['tempo_restante'] = 0
+            # notifica_email(articolo)   # Vera notifica email
+            print_email_falsa(articolo)  # Falsa notifica email
             articolo.terminato = True
             articolo.save()
         else:
             context['tempo_restante'] = round((articolo.dataFineAsta - timezone.now()).seconds / 60)
         context['ultima_offerta'] = ultima_offerta
         context['username'] = self.request.user.username
+
+        articoli_consigliati = Articolo.objects.filter(
+            Q(titolo__icontains=articolo.id) | Q(categoria=articolo.categoria, prezzoIniziale__range=[articolo.prezzoIniziale-20, articolo.prezzoIniziale+20])
+        ).exclude(id=articolo.id)[:3]
+        context['articoli_consigliati'] = articoli_consigliati
         
         return context
 
@@ -123,7 +133,7 @@ class OffertaCreateView(View):
             else:
                 offerta = Offerta(acquirente=request.user, articolo=articolo, saldo=saldo)
                 offerta.save()
-                return reverse('gestione:annuncio-detail', kwargs={'pk': articolo.id})
+                return redirect('gestione:annuncio-detail', pk=articolo.id)
 
         return render(request, 'offerta_create.html', {'form': form, 'articolo': articolo})
 
@@ -165,3 +175,42 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
         # Metodo che restituisce l'URL di successo dopo la creazione della recensione
         venditore_username = self.kwargs['venditore_username']
         return reverse('gestione:recensione-list', kwargs={'venditore_username': venditore_username})
+
+## Funzione per la notifica email al vincitore dell'asta
+#def notifica_email(articolo):
+#    offerta = Offerta.objects.filter(articolo=articolo).order_by('-importo').first()
+#    if offerta_piu_alta:
+#        # Ottieni l'utente vincitore dell'asta
+#        vincitore = offerta_piu_alta.utente
+#
+#        # Invia la mail al vincitore
+#        subject = f"Complimenti! Hai vinto l'asta per l'articolo {articolo.titolo}"
+#        message = f"Ciao {vincitore.username},\n\nHai vinto l'asta per l'articolo {articolo.titolo}.\n\nGrazie per aver partecipato!\n\nCordiali saluti,\nIl Tuo Sito"
+#        sender = 'your-email@example.com'
+#        receiver = vincitore.email
+#
+#        msg = MIMEText(message)
+#        msg['Subject'] = subject
+#        msg['From'] = sender
+#        msg['To'] = receiver
+#
+#        try:
+#            smtp_server = ''
+#            smtp_port = 587
+#            smtp_username = ''
+#            smtp_password = ''
+#
+#            with smtplib.SMTP(smtp_server, smtp_port) as server:
+#                server.starttls()
+#                server.login(smtp_username, smtp_password)
+#                server.send_message(msg)
+#
+#        except Exception as e:
+#            # Gestisci eventuali errori nell'invio della mail
+#            print(f"Errore durante l'invio della mail: {e}")
+
+def print_email_falsa(articolo):
+    offerta = Offerta.objects.filter(articolo=articolo).order_by('-importo').first()
+    if offerta_piu_alta:
+        vincitore = offerta_piu_alta.utente
+        print(f"Complimenti ad {vincitore.username} per aver vinto l'asta per l'articolo {articolo.titolo}, troverai una mail all'indirizzo {vincitore.email}.")

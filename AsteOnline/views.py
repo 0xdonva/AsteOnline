@@ -3,9 +3,9 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate, logout
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 
@@ -42,3 +42,9 @@ class HomeView(ListView):
             if is_venditore:
                 context['username'] = self.request.user.username
         return context
+
+class LogoutView(LogoutView):
+    def get(self, request):
+        logout(request)
+
+        return redirect('homepage')
