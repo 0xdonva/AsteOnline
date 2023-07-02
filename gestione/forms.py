@@ -20,6 +20,20 @@ class AnnuncioCreateForm(forms.ModelForm):
         self.fields['terminato'].widget = forms.HiddenInput()
         self.fields['venditore'].widget = forms.HiddenInput()
         self.fields['venditore'].required = False
+    
+    def clean_titolo(self):
+        titolo = self.cleaned_data.get('titolo')
+        # Effettua la validazione per evitare caratteri speciali
+        if not titolo.isalnum():
+            raise forms.ValidationError("Il titolo non può contenere caratteri speciali.")
+        return titolo
+
+    def clean_schedaTecnica(self):
+        schedaTecnica = self.cleaned_data.get('schedaTecnica')
+        # Effettua la validazione per evitare caratteri speciali
+        if not schedaTecnica.isalnum():
+            raise forms.ValidationError("La scheda tecnica non può contenere caratteri speciali.")
+        return schedaTecnica
 
 class AnnuncioUpdateForm(forms.ModelForm):
     class Meta:

@@ -36,6 +36,9 @@ class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.venditore = self.request.user.username
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        return render(self.request, self.template_name, {'form': form})
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
