@@ -119,7 +119,7 @@ class AnnuncioSearchView(ListView):
         return context
 
 # View riguardanti le offerte
-class OffertaCreateView(View):
+class OffertaCreateView(LoginRequiredMixin, View):
     def get(self, request, articolo_id):
         articolo = get_object_or_404(Articolo, pk=articolo_id)
         form = OffertaCreateForm()
@@ -213,7 +213,7 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
 #            print(f"Errore durante l'invio della mail: {e}")
 
 def print_email_falsa(articolo):
-    offerta = Offerta.objects.filter(articolo=articolo).order_by('-importo').first()
-    if offerta_piu_alta:
-        vincitore = offerta_piu_alta.utente
+    offerta = Offerta.objects.filter(articolo=articolo).order_by('-saldo').first()
+    if offerta:
+        vincitore = offerta.acquirente
         print(f"Complimenti ad {vincitore.username} per aver vinto l'asta per l'articolo {articolo.titolo}, troverai una mail all'indirizzo {vincitore.email}.")

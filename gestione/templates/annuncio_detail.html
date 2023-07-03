@@ -36,7 +36,7 @@
     {% for articolo in articoli_consigliati %}
       <div class="col-md-4">
         <div class="card">
-          <img src="{{ articolo.immagine.url }}" class="card-img-top" alt="{{ articolo.titolo }}">
+          <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
           <div class="card-body">
             <h5 class="card-title">{{ articolo.titolo }}</h5>
             <p class="card-text">{{ articolo.descrizione }}</p>

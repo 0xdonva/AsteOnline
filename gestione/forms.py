@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import *
 from datetime import datetime
+import string
 
 # Form riguardanti gli annunci
 class AnnuncioCreateForm(forms.ModelForm):
@@ -13,7 +14,6 @@ class AnnuncioCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['immagine'].required = False
         self.fields['dataFineAsta'].required = False
         self.fields['dataFineAsta'].widget = forms.HiddenInput()
         self.fields['terminato'].required = False
@@ -24,15 +24,17 @@ class AnnuncioCreateForm(forms.ModelForm):
     def clean_titolo(self):
         titolo = self.cleaned_data.get('titolo')
         # Effettua la validazione per evitare caratteri speciali
-        if not titolo.isalnum():
-            raise forms.ValidationError("Il titolo non può contenere caratteri speciali.")
+        for i in titolo:
+            if i in string.punctuation:
+                raise forms.ValidationError("Il titolo non può contenere caratteri speciali.")
         return titolo
 
     def clean_schedaTecnica(self):
         schedaTecnica = self.cleaned_data.get('schedaTecnica')
         # Effettua la validazione per evitare caratteri speciali
-        if not schedaTecnica.isalnum():
-            raise forms.ValidationError("La scheda tecnica non può contenere caratteri speciali.")
+        for i in schedaTecnica:
+            if i in string.punctuation:
+                raise forms.ValidationError("Il titolo non può contenere caratteri speciali.")
         return schedaTecnica
 
 class AnnuncioUpdateForm(forms.ModelForm):
