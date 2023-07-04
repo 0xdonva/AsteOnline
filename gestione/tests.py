@@ -4,8 +4,13 @@ from django.urls import reverse
 from .models import Articolo
 
 class AnnuncioDetailViewTestCase(TestCase):
+    """
+    Test che crea un articolo nel database, controlla che la pagina detail venga visualizzata,
+    che esista e che abbia i campi corretti.
+    """
+
     def test_caricamento_pagina_detail(self):
-        # Crea un annuncio di prova
+        # Creazione di un annuncio di prova
         articolo = Articolo.objects.create(
             venditore = 'gianni',
             titolo='Articolo di prova',
@@ -16,28 +21,33 @@ class AnnuncioDetailViewTestCase(TestCase):
             durataAsta=12
         )
 
-        # Ottieni l'URL della pagina di dettaglio dell'annuncio
+        # Ottienimento dell'URL della pagina di dettaglio dell'annuncio
         url = reverse('gestione:annuncio-detail', kwargs={'pk': articolo.pk})
 
-        # Effettua una richiesta GET alla pagina di dettaglio dell'articolo
+        # Viene effettuata una richiesta GET alla pagina di dettaglio dell'articolo
         response = self.client.get(url)
 
-        # Controlla che la risposta abbia un codice HTTP 200 (OK)
+        # Controllo sulla risposta che abbia un codice HTTP 200 (OK)
         self.assertEqual(response.status_code, 200)
 
-        # Controlla che il template utilizzato sia corretto
+        # Controllo del template corretto
         self.assertTemplateUsed(response, 'annuncio_detail.html')
 
-        # Controlla che l'articolo visualizzato nella pagina sia quello corretto
+        # Controllo che l'articolo visualizzato nella pagina sia quello corretto
         self.assertEqual(response.context['articolo'], articolo)
 
-        # Controlla che il titolo dell'articolo sia presente nel contenuto della risposta
+        # Controllo che il titolo dell'articolo sia presente nel contenuto della risposta
         self.assertContains(response, articolo.titolo)
 
 class ArticoloInputTestCase(TestCase):
+    """
+    Test che tenta l'inserimento di un articolo con campi non accettabili tramite POST
+    e venga rifiutato dalla piattaforma.
+    """
     def test_inserimento_articolo(self):
+        # Creazione di un'immagine falsa per il test
         immagine = SimpleUploadedFile(name='test.jpg', content=b'', content_type='image/jpeg')
-        # Effettua una richiesta POST per l'inserimento di un nuovo articolo
+        # Viene effettuata una richiesta POST per l'inserimento di un nuovo articolo
         response = self.client.post(reverse('gestione:annuncio-create'), {
             'titolo': '*^&%#Ciao',
             'schedaTecnica': '!@#$^&*Prova',
@@ -47,9 +57,11 @@ class ArticoloInputTestCase(TestCase):
             'durataAsta': 12
         })
 
-        # Controlla che la risposta abbia un codice HTTP 302 (redirect)
+        # Controllo  sulla risposta che abbia un codice HTTP 302 (redirect)
         self.assertEqual(response.status_code, 302)
 
+        # Ricerca di un articolo con lo stesso titolo del tentato inserimento
         articolo = Articolo.objects.filter(titolo='*^&%#Ciao')
 
+        # L'articolo non esiste
         self.assertEqual(articolo.exists(), False)

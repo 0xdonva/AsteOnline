@@ -22,15 +22,17 @@ from . import views
 app_name = 'gestione'
 
 urlpatterns = [
-    #Parte legata al venditore
+    # Pagine legate all'annuncio
     path('ricerca/', views.AnnuncioSearchView.as_view(), name = 'annuncio-search'),
     path('nuovo_annuncio/', views.AnnuncioCreateView.as_view(), name = 'annuncio-create'),
     path('annuncio/<int:pk>/', views.AnnuncioDetailView.as_view(), name='annuncio-detail'),
     path('annuncio/<int:pk>/update/', views.AnnuncioUpdateView.as_view(), name='annuncio-update'),
     path('annuncio/<int:pk>/delete/', views.AnnuncioDeleteView.as_view(), name='annuncio-delete'),
 
+    # Pagina legata alla creazione di un'offerta
     path('nuova_offerta/<articolo_id>/', views.OffertaCreateView.as_view(), name='offerta-create'),
 
+    # Pagine legate alle recensioni
     path('recensioni/<venditore_username>/', views.RecensioneListView.as_view(), name = 'recensione-list'),
     path('nuova_recensione/<venditore_username>/', views.RecensioneCreateView.as_view(), name='recensione-create'),
 ]

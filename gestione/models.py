@@ -8,6 +8,13 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class Articolo(models.Model):
+    """
+    Modello che viene usato per salvare nel database un nuovo annuncio,
+    il venditore è solo un CharField perché inizialmente doveva essere un 
+    ForeignKey legata ad User ma non funzionava, il resto dei campi è autoesplicativa.
+    Le categorie sono sei e sono quelle elencate mentre il tempo di durata di un'asta
+    può essere 12 ore-1-2-3-4-5-6 giorni.
+    """
     CATEGORIE = [
         ('Elettronica','Elettronica'),
         ('Informatica','Informatica'),
@@ -39,6 +46,10 @@ class Articolo(models.Model):
     terminato = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        """
+        Funzione che viene invocata prima che un nuovo articolo venga salvato e
+        calcola e scrive l'attributo dataFineAsta.
+        """
         self.dataFineAsta = timezone.now() + timedelta(hours=self.durataAsta)
         super(Articolo, self).save(*args, **kwargs)
 
@@ -49,16 +60,26 @@ class Articolo(models.Model):
         verbose_name_plural = "Articoli"
 
 class Offerta(models.Model):
-
+    """
+    Modello che salva un'offerta effettuata da un :model:'auth.User' ad 
+    un :model:'gestione.Articolo'.
+    """
     acquirente = models.ForeignKey(User, on_delete=models.CASCADE)
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
     saldo = models.DecimalField(validators=[MinValueValidator(Decimal('0.01'))], max_digits=7, decimal_places=2)
 
     def save(self, *args, **kwargs):
+        """
+        Funzione che viene invoca prima che una nuova offerta venga salvata e invoca
+        la funzione elimina_offerte_precedenti.
+        """
         super().save(*args, **kwargs)
         self.elimina_offerte_precedenti()
 
     def elimina_offerte_precedenti(self):
+        """
+        Funzione che elimina le offerte precedenti rispetto all'ultima inserita.
+        """
         offerte_precedenti = Offerta.objects.filter(articolo=self.articolo, saldo__lt=self.saldo)
         offerte_precedenti.delete()
 
@@ -66,7 +87,11 @@ class Offerta(models.Model):
         verbose_name_plural = "Offerte"
 
 class Recensione(models.Model):
-
+    """
+    Modello che viene usato per inserire una nuova recensione che oltre ad avere come
+    attributi il :model:'auth.User' (acquirente) e :model:'auth.User' (venditore), poi
+    un testo che è il commento e un voto che va da un minimo di 0 ad un massimo di 5.
+    """
     acquirente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="acquirente")
     venditore = models.ForeignKey(User, on_delete=models.CASCADE, related_name="venditore")
     testo = models.TextField()

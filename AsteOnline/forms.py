@@ -5,19 +5,31 @@ from django.contrib.auth.forms import AuthenticationForm
 from gestione.models import *
 
 class VenditoreForm(UserCreationForm):
-
+    """
+    Form usato per la registrazione di un nuovo utente ed essere inserito nel gruppo dei
+    Venditori.
+    """
     def save(self, commit=True):
-        user = super().save(commit) #ottengo un riferimento all'utente
-        g = Group.objects.get(name="Venditori") #cerco il gruppo che mi interessa
-        g.user_set.add(user) #aggiungo l'utente al gruppo
+        # Viene ottenuto un riferimento all'utente
+        user = super().save(commit)
+        # Ricerca il gruppo che mi interessa
+        g = Group.objects.get(name="Venditori") 
+        # Aggiunta dell'utente al gruppo
+        g.user_set.add(user)
         return user
 
 class AcquirenteForm(UserCreationForm):
-
+    """
+    Form usato per la registrazione di un nuovo utente ed essere inserito nel gruppo dei
+    Venditori.
+    """
     def save(self, commit=True):
-        user = super().save(commit) #ottengo un riferimento all'utente
-        g = Group.objects.get(name="Acquirenti") #cerco il gruppo che mi interessa
-        g.user_set.add(user) #aggiungo l'utente al gruppo
+        # Viene ottenuto un riferimento all'utente
+        user = super().save(commit)
+        # Ricerca il gruppo che mi interessa
+        g = Group.objects.get(name="Acquirenti") 
+        # Aggiunta dell'utente al gruppo
+        g.user_set.add(user)
         return user
 
     

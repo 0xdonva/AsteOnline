@@ -23,14 +23,25 @@ from gestione import urls
 from . import views
 
 urlpatterns = [
+    # Pagine legate alla registrazione
     path('signupV/', views.VenditoreCreate.as_view(), name = 'registrazione-venditore'),
     path('signupA/', views.AcquirenteCreate.as_view(), name = 'registrazione-acquirente'),
     path('signup/', views.UtenteCreate.as_view(), name = 'registrazione'),
+    
+    # Pagina del login che eredita da 'auth_views'
     path("login/", auth_views.LoginView.as_view(), name="login"),
+    # Pagina del logout
     path("logout/", views.LogoutView.as_view(), name="logout"),
 
+    # Url legato all'app gestione
     path('gestione/', include('gestione.urls')),
+
+    # Url legato all'admin
     path('admin/', admin.site.urls),
 
+    # Url legato alla documentazione
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Homepage
     path('', views.HomeView.as_view(), name="homepage")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
