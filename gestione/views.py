@@ -63,8 +63,6 @@ class AnnuncioDetailView(DetailView):
 
         if str(articolo.dataFineAsta - timezone.now())[0] == '-':
             context['tempo_restante'] = 0
-            # notifica_email(articolo)   # Vera notifica email
-            print_email_falsa(articolo)  # Falsa notifica email
             articolo.terminato = True
             articolo.save()
         else:
@@ -178,42 +176,3 @@ class RecensioneCreateView(LoginRequiredMixin, CreateView):
         # Metodo che restituisce l'URL di successo dopo la creazione della recensione
         venditore_username = self.kwargs['venditore_username']
         return reverse('gestione:recensione-list', kwargs={'venditore_username': venditore_username})
-
-## Funzione per la notifica email al vincitore dell'asta
-#def notifica_email(articolo):
-#    offerta = Offerta.objects.filter(articolo=articolo).order_by('-importo').first()
-#    if offerta_piu_alta:
-#        # Ottieni l'utente vincitore dell'asta
-#        vincitore = offerta_piu_alta.utente
-#
-#        # Invia la mail al vincitore
-#        subject = f"Complimenti! Hai vinto l'asta per l'articolo {articolo.titolo}"
-#        message = f"Ciao {vincitore.username},\n\nHai vinto l'asta per l'articolo {articolo.titolo}.\n\nGrazie per aver partecipato!\n\nCordiali saluti,\nIl Tuo Sito"
-#        sender = 'your-email@example.com'
-#        receiver = vincitore.email
-#
-#        msg = MIMEText(message)
-#        msg['Subject'] = subject
-#        msg['From'] = sender
-#        msg['To'] = receiver
-#
-#        try:
-#            smtp_server = ''
-#            smtp_port = 587
-#            smtp_username = ''
-#            smtp_password = ''
-#
-#            with smtplib.SMTP(smtp_server, smtp_port) as server:
-#                server.starttls()
-#                server.login(smtp_username, smtp_password)
-#                server.send_message(msg)
-#
-#        except Exception as e:
-#            # Gestisci eventuali errori nell'invio della mail
-#            print(f"Errore durante l'invio della mail: {e}")
-
-def print_email_falsa(articolo):
-    offerta = Offerta.objects.filter(articolo=articolo).order_by('-saldo').first()
-    if offerta:
-        vincitore = offerta.acquirente
-        print(f"Complimenti ad {vincitore.username} per aver vinto l'asta per l'articolo {articolo.titolo}, troverai una mail all'indirizzo {vincitore.email}.")

@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils import timezone
+from decimal import Decimal
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -18,7 +20,10 @@ class Articolo(models.Model):
         (12, 12),
         (24, 24),
         (48, 48),
-        (72, 72)
+        (72, 72),
+        (96, 96),
+        (120, 120),
+        (144, 144)
     ]
 
     # Qua andrebbe l'ID ma viene messo in automatico
@@ -27,7 +32,7 @@ class Articolo(models.Model):
     schedaTecnica = models.TextField()
     categoria = models.CharField(max_length=20, choices=CATEGORIE, default='Elettronica')
     immagine = models.ImageField(upload_to="articoli/", height_field=None, width_field=None, max_length=None)
-    prezzoIniziale = models.DecimalField(max_digits=7, decimal_places=2)
+    prezzoIniziale = models.DecimalField(validators=[MinValueValidator(Decimal('0.01'))], max_digits=7, decimal_places=2)
     dataInizioAsta = models.DateTimeField(auto_now=False, auto_now_add=True)
     durataAsta = models.IntegerField(choices=ORE, default=12)
     dataFineAsta = models.DateTimeField(auto_now=False, auto_now_add=False)
@@ -47,7 +52,7 @@ class Offerta(models.Model):
 
     acquirente = models.ForeignKey(User, on_delete=models.CASCADE)
     articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
-    saldo = models.DecimalField(max_digits=5, decimal_places=2)
+    saldo = models.DecimalField(validators=[MinValueValidator(Decimal('0.01'))], max_digits=7, decimal_places=2)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -65,7 +70,7 @@ class Recensione(models.Model):
     acquirente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="acquirente")
     venditore = models.ForeignKey(User, on_delete=models.CASCADE, related_name="venditore")
     testo = models.TextField()
-    voto = models.IntegerField()
+    voto = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     class Meta:
         verbose_name_plural = "Recensioni"
