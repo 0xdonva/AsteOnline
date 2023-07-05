@@ -7,10 +7,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'Elettronica' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>
@@ -22,10 +22,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'Informatica' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>
@@ -39,10 +39,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'CD e Vinili' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>
@@ -54,10 +54,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'Videogiochi' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>
@@ -71,10 +71,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'Strumenti musicali' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>
@@ -86,10 +86,10 @@
       {% for articolo in articoli %}
         {% if articolo.categoria == 'Film e DVD' and not articolo.terminato %}
           <div class="card">
-            <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
             <div class="card-body">
               <h5 class="card-title">{{ articolo.titolo }}</h5>
               <p class="card-text">{{ articolo.schedaTecnica }}</p>
+              <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
               <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
             </div>
           </div>

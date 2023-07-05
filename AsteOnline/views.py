@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
+from django.contrib import messages
 
 from .forms import *
 from gestione.models import *
@@ -75,5 +76,7 @@ class LogoutView(LogoutView):
 
     def get(self, request):
         logout(request)
+
+        messages.success(request, "Logout effettuato con successo.")
 
         return redirect('homepage')

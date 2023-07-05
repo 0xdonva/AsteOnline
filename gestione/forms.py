@@ -50,7 +50,7 @@ class AnnuncioCreateForm(forms.ModelForm):
         # Effettua la validazione per evitare caratteri speciali
         for i in schedaTecnica:
             if i in string.punctuation:
-                raise forms.ValidationError("Il titolo non può contenere caratteri speciali.")
+                raise forms.ValidationError("La scheda tecnica non può contenere caratteri speciali.")
         return schedaTecnica
 
 class AnnuncioUpdateForm(forms.ModelForm):
@@ -77,7 +77,7 @@ class OffertaCreateForm(forms.Form):
     """
     Form usato per l'inserimento di una nuova offerta del modello :model:'gestione/Offerta'.
     """
-    saldo = forms.DecimalField(label='Saldo:', max_digits=5, decimal_places=2)
+    saldo = forms.DecimalField(label='Saldo:', max_digits=7, decimal_places=2, min_value=1)
 
 # Form riguardanti le recensioni
 class RecensioneCreateForm(forms.ModelForm):

@@ -36,11 +36,11 @@ urlpatterns = [
     # Url legato all'app gestione
     path('gestione/', include('gestione.urls')),
 
-    # Url legato all'admin
-    path('admin/', admin.site.urls),
-
     # Url legato alla documentazione
     path('admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Url legato all'admin
+    path('admin/', admin.site.urls),
 
     # Homepage
     path('', views.HomeView.as_view(), name="homepage")

@@ -15,6 +15,7 @@
     {% if articoli %}
         <ul>
             {% for articolo in articoli %}
+                {% if not articolo.terminato %}
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{ articolo.titolo }}</h5>
@@ -22,6 +23,7 @@
                         <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Vai</a>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
         </ul>
     {% else %}

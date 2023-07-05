@@ -5,25 +5,28 @@
 {% block content %}
   <h1>{{ articolo.titolo }}</h1>
   <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
-  <p>Scheda Tecnica: {{ articolo.schedaTecnica }}</p>
-  <p>Prezzo Iniziale: {{ articolo.prezzoIniziale }}</p>
-  <p>Prezzo Riserva: {{ articolo.prezzoRiserva }}</p>
-  <p>Data Inizio Asta: {{ articolo.dataInizioAsta }}</p>
-  <p>Durata Asta: {{ articolo.durataAsta }}</p>
+  <p>Scheda tecnica: {{ articolo.schedaTecnica }}</p>
+  <p>Prezzo iniziale: {{ articolo.prezzoIniziale }}</p>
+  <p>Data di inizio asta: {{ articolo.dataInizioAsta }}</p>
+  <p>Durata asta: {{ articolo.durataAsta }}</p>
   <p>Venditore: <a href="{% url 'gestione:recensione-list' venditore_username=articolo.venditore %}">{{articolo.venditore}}</a></p>
 
   {% if ultima_offerta %}
       <h2>Ultima Offerta</h2>
       <p>Acquirente: {{ ultima_offerta.acquirente }}</p>
-      <p>Saldo: {{ ultima_offerta.saldo }}</p>
-      {% if user.is_authenticated %}
-        <p>Tempo restante: {{ tempo_restante }} minuti.</p>
-        {% if tempo_restante > 1 %}
-          <a href="{% url 'gestione:offerta-create' articolo_id=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
-        {% endif %}
-      {% endif %}
+      <p>Saldo: {{ ultima_offerta.saldo }}$</p>
   {% else %}
       <p>Non ci sono offerte per questo articolo al momento.</p>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% if tempo_restante > 1 and not articolo.terminato %}
+      <p>Tempo restante: {{ tempo_restante }} minuti.</p>
+      {% if not is_venditore %}
+        <a href="{% url 'gestione:offerta-create' articolo_id=articolo.id %}" class="btn btn-primary">Nuova Offerta</a>
+      {% endif %}
+    {% else %}
+      <p>Asta terminata</p>
+    {% endif %}
   {% endif %}
 
   {% if articolo.venditore == username %}
@@ -34,16 +37,18 @@
   <h3>Articoli consigliati</h3>
   <div class="row">
     {% for articolo in articoli_consigliati %}
+      {% if not articolo.terminato %}
       <div class="col-md-4">
         <div class="card">
-          <img src="{{ articolo.immagine }}" class="card-img-top" alt="{{ articolo.titolo }}">
           <div class="card-body">
             <h5 class="card-title">{{ articolo.titolo }}</h5>
             <p class="card-text">{{ articolo.descrizione }}</p>
+            <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
             <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Dettaglio</a>
           </div>
         </div>
       </div>
+      {% endif %}
     {% endfor %}
   </div>
 {% endblock %}

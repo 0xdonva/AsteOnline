@@ -1,6 +1,7 @@
 from .models import *
 from .forms import *
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
@@ -63,6 +64,7 @@ class AnnuncioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             form.instance.venditore = self.request.user.username
+            messages.success(request, "Annuncio inserito con successo.")
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
@@ -106,6 +108,11 @@ class AnnuncioDetailView(DetailView):
             Q(titolo__icontains=articolo.titolo) | Q(categoria=articolo.categoria, prezzoIniziale__range=[articolo.prezzoIniziale-20, articolo.prezzoIniziale+20])
         ).exclude(id=articolo.id)[:3]
         context['articoli_consigliati'] = articoli_consigliati
+
+        if (self.request.user.groups.filter(name='Venditori').exists()):
+            context['is_venditore'] = True
+        else:
+            context['is_venditore'] = False
         
         return context
 
@@ -129,6 +136,16 @@ class AnnuncioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         """
         articolo = self.get_object()
         return articolo.venditore == self.request.user.username
+
+    def form_valid(self, form):
+        """
+        Funzione che controlla che il form sia valido e poi inserisce il messaggio dell'aggiornamento riuscito.
+        """
+        response = super().form_valid(form)
+
+        messages.success(self.request, "Annuncio aggiornato correttamente.")
+
+        return response
 
 
 class AnnuncioDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -223,6 +240,7 @@ class OffertaCreateView(LoginRequiredMixin, UserPassesTestMixin, View):
             else:
                 offerta = Offerta(acquirente=request.user, articolo=articolo, saldo=saldo)
                 offerta.save()
+                messages.success(request, "Offerta inserita con successo.")
                 return redirect('gestione:annuncio-detail', pk=articolo.id)
 
         return render(request, 'offerta_create.html', {'form': form, 'articolo': articolo})
@@ -251,6 +269,12 @@ class RecensioneListView(ListView):
         articoli = Articolo.objects.filter(venditore=venditore)
         context['articoli'] = articoli
         context['venditore'] = venditore
+
+        if (self.request.user.groups.filter(name='Venditori').exists()):
+            context['gruppo_venditore'] = True
+        else:
+            context['gruppo_venditore'] = False
+
         return context
 
     def get_queryset(self):
@@ -287,6 +311,7 @@ class RecensioneCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         venditore = User.objects.get(username=self.kwargs['venditore_username'])
         form.instance.acquirente = self.request.user
         form.instance.venditore = venditore
+        messages.success(self.request, "Recensione inserita correttamente.")
         return super().form_valid(form)
 
     def get_success_url(self):
