@@ -9,14 +9,14 @@
 
 {% block content %}
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <p>Il tuo username e la password non coincidono, ritenta.</p>
     {% endif %}
 
     {% if next %}
         {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+            <p>Il tuo account ha già effettuato l'accesso, non dovresti essere qui.</p>
         {% else %}
-            <p>Please login to see this page.</p>
+            <p>Per favore accedere per vedere la pagina.</p>
         {% endif %}
     {% endif %}
 
