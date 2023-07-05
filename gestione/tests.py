@@ -12,7 +12,7 @@ class AnnuncioDetailViewTestCase(TestCase):
     def test_caricamento_pagina_detail(self):
         # Creazione di un annuncio di prova
         articolo = Articolo.objects.create(
-            venditore = 'gianni',
+            venditore = 'gianni2',
             titolo='Articolo di prova',
             schedaTecnica='Descrizione dell\'annuncio di prova',
             categoria='Elettronica',
