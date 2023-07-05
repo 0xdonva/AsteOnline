@@ -19,7 +19,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{ articolo.titolo }}</h5>
-                        <p class="card-text">Prezzo Attuale: {{ articolo.prezzoAttuale }}</p>
+                        <img src="{{ articolo.immagine.url }}" alt="Immagine Annuncio" width="120"/>
                         <a href="{% url 'gestione:annuncio-detail' pk=articolo.id %}" class="btn btn-primary">Vai</a>
                     </div>
                 </div>

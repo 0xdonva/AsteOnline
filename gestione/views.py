@@ -235,7 +235,9 @@ class OffertaCreateView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if form.is_valid():
             saldo = form.cleaned_data['saldo']
-            if articolo.offerta_set.filter(saldo__gte=saldo).exists():
+            if saldo < articolo.prezzoIniziale:
+                form.add_error('saldo', 'L\'offerta deve essere maggiore dell\'offerta iniziale.')
+            elif articolo.offerta_set.filter(saldo__gte=saldo).exists():
                 form.add_error('saldo', 'L\'offerta deve essere maggiore di quelle già fatte.')
             else:
                 offerta = Offerta(acquirente=request.user, articolo=articolo, saldo=saldo)
