@@ -23,3 +23,44 @@ pipenv install
 ```
 python manage.py runserver
 ```
+
+---
+
+## Credenziali per testare i vari utenti
+* Admin:
+```
+user: admin
+pwd:  admin
+```
+
+* Venditori:
+```
+user: Sony
+pwd:  techweb23
+```
+```
+user: Nintendo
+pwd:  techweb23
+```
+```
+user: paolo2
+pwd:  techweb23
+```
+```
+user: gianni2
+pwd:  techweb23
+```
+
+* Acquirenti:
+```
+user: carlo
+pwd:  techweb23
+```
+```
+user: pietro
+pwd:  techweb23
+```
+```
+user: marco
+pwd:  techweb23
+```
